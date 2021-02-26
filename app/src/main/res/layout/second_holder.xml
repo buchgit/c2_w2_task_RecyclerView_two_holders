@@ -5,11 +5,11 @@
               android:orientation="vertical">
     
     <TextView
-            android:id="@+id/tv_first_holder"
+            android:id="@+id/tv_second_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <TextView
-            android:id="@+id/tv_first_holder_2"
+            android:id="@+id/tv_second_holder_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 </LinearLayout>
