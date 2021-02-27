@@ -71,4 +71,6 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         void setProgress(int value);
         ProgressBar getProgressBar();
     }
+
+
 }
