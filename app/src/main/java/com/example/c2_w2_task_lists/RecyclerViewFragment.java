@@ -14,14 +14,16 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.c2_w2_task_lists.models.AbstractModel;
 
 /*
 1. implement LoaderManager.LoaderCallbacks<Т> , где Т - тип таблицы хранения наших данных
 2. implement адаптера, который extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+3/ implement SwipeRefreshLayout для обновления данных в активити
  */
 
-public class RecyclerViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<AbstractModel[]>, FirstAdapter.ElementManager {
+public class RecyclerViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<AbstractModel[]>, FirstAdapter.ElementManager, SwipeRefreshLayout.OnRefreshListener {
 
     private final static int size = 15;
 
@@ -29,6 +31,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     private final FirstAdapter firstAdapter = new FirstAdapter();
     private ProgressBar progressBar;
     private FirstAdapter.ElementManager elementManager;
+    private SwipeRefreshLayout refreshLayout;
 
     public static RecyclerViewFragment newInstance(){
         return new RecyclerViewFragment();
@@ -50,6 +53,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         recyclerView = view.findViewById(R.id.rv_fragment);
         progressBar = view.findViewById(R.id.pr_bar_fragment);
+        refreshLayout = view.findViewById(R.id.sw_ref_layout);
 
     }
 
@@ -64,7 +68,9 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
         //передадим в лоадер для управления progress bar
         elementManager = this;
         //перезагрузка лоадера
-        getLoaderManager().restartLoader(0,null,this);
+        //getLoaderManager().restartLoader(0,null,this);
+        //устанавливает листенер обновлений активити
+        refreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -86,6 +92,9 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(@NonNull Loader<AbstractModel[]> loader, AbstractModel[] data) {
         firstAdapter.setMass(data);
         progressBar.setVisibility(View.INVISIBLE);
+        if (refreshLayout.isRefreshing()){
+            refreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -100,5 +109,10 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
 
     public ProgressBar getProgressBar() {
         return progressBar;
+    }
+
+    @Override
+    public void onRefresh() {
+        getLoaderManager().restartLoader(0,null,this);
     }
 }
