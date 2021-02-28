@@ -36,7 +36,7 @@ public class FirstHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "deleted position: "+ String.valueOf(position), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "deleted position: " + String.valueOf(position), Toast.LENGTH_SHORT).show();
                 elementManager.deleteItem(position);
             }
         });

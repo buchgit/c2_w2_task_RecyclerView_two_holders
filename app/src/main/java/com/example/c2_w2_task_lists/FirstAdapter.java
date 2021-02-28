@@ -28,7 +28,7 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (viewType == FIRST_HOLDER_TYPE) {
             return new FirstHolder(inflater.inflate(R.layout.first_holder, parent, false));
         } else if (viewType == SECOND_HOLDER_TYPE) {
-            return new SecondHolder(inflater.inflate(R.layout.second_holder,parent,false));
+            return new SecondHolder(inflater.inflate(R.layout.second_holder, parent, false));
         } else throw new IllegalArgumentException();
     }
 
@@ -37,11 +37,11 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof FirstHolder) {
             FirstHolder fholder = (FirstHolder) holder;
-            fholder.bind((FirstModel) mass.get(position),position);
+            fholder.bind((FirstModel) mass.get(position), position);
             fholder.setElementManager(elementManager);
         } else if (holder instanceof SecondHolder) {
             SecondHolder sholder = (SecondHolder) holder;
-            sholder.bind((SecondModel) mass.get(position),position);
+            sholder.bind((SecondModel) mass.get(position), position);
             sholder.setElementManager(elementManager);
         } else throw new IllegalArgumentException();
     }
@@ -57,11 +57,11 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     //onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     @Override
     public int getItemViewType(int position) {
-        if(mass.get(position) instanceof FirstModel){
+        if (mass.get(position) instanceof FirstModel) {
             return FIRST_HOLDER_TYPE;
-        }else if (mass.get(position) instanceof SecondModel){
+        } else if (mass.get(position) instanceof SecondModel) {
             return SECOND_HOLDER_TYPE;
-        }else throw new IllegalArgumentException();
+        } else throw new IllegalArgumentException();
     }
 
     @Override
@@ -75,13 +75,14 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public ArrayList<AbstractModel> getMass(){
+    public ArrayList<AbstractModel> getMass() {
         return mass;
     }
 
     //интерфейс для управления прогресс баром, //не доделал
-    public interface ElementManager{
+    public interface ElementManager {
         ProgressBar getProgressBar();
+
         void deleteItem(int position);
     }
 
@@ -89,12 +90,12 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.elementManager = elementManager;
     }
 
-    public void addElement(AbstractModel model){
+    public void addElement(AbstractModel model) {
         mass.add(model);
         notifyDataSetChanged();
     }
 
-    public void reloadAdapter(){
+    public void reloadAdapter() {
         notifyDataSetChanged();
     }
 

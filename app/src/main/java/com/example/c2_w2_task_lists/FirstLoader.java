@@ -23,6 +23,7 @@ public class FirstLoader extends AsyncTaskLoader<ArrayList<AbstractModel>> {
         super(context);
         this.size = size;
     }
+
     //не в главном потоке
     @Nullable
     @Override
@@ -34,12 +35,14 @@ public class FirstLoader extends AsyncTaskLoader<ArrayList<AbstractModel>> {
         }
         return null;
     }
+
     //в главном потоке
     @Override
     protected void onStartLoading() {
         elementManager.getProgressBar().setVisibility(View.VISIBLE);
         forceLoad();
     }
+
     //в главном потоке. Не отрабатывает окончание загрузки, не останавливает прогресс бар в этом месте.
     @Override
     protected void onStopLoading() {
@@ -54,14 +57,13 @@ public class FirstLoader extends AsyncTaskLoader<ArrayList<AbstractModel>> {
             //TimeUnit.MILLISECONDS.sleep(300);
             TimeUnit.MILLISECONDS.sleep(100);
             int type = random.nextInt(200);
-            if (type%2 == 0) {
+            if (type % 2 == 0) {
                 FirstModel model = new FirstModel(UUID.randomUUID().toString(), "name" + i);
                 mass.add(model);
             } else {
                 SecondModel model2 = new SecondModel(UUID.randomUUID().toString(), i);
                 mass.add(model2);
             }
-            //elementManager.setProgress(i * 10);
         }
         return mass;
     }

@@ -26,7 +26,7 @@ public class SecondHolder extends RecyclerView.ViewHolder {
         textView2.setText(String.valueOf(secondModel.getNumber()));
 
         itemView.setOnClickListener(v -> {
-            Toast.makeText(v.getContext(), "deleted position: "+ String.valueOf(position), Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), "deleted position: " + String.valueOf(position), Toast.LENGTH_SHORT).show();
             elementManager.deleteItem(position);
         });
     }

@@ -38,7 +38,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     private FirstAdapter.ElementManager elementManager;
     private SwipeRefreshLayout refreshLayout;
 
-    public static RecyclerViewFragment newInstance(){
+    public static RecyclerViewFragment newInstance() {
         return new RecyclerViewFragment();
     }
 
@@ -51,8 +51,9 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.rv_fr_layout,container,false);
+        return inflater.inflate(R.layout.rv_fr_layout, container, false);
     }
+
     //создаем элементы вьюхи фрагмента
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
         //передадим в лоадер для управления progress bar
         elementManager = this;
         firstAdapter.setElementManager(elementManager);
-        if (savedInstanceState!=null){
+        if (savedInstanceState != null) {
             ArrayList<AbstractModel> mass = (ArrayList<AbstractModel>) savedInstanceState.getSerializable(MASSIVE);
             firstAdapter.setMass(mass);
         }
@@ -100,7 +101,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(@NonNull Loader<ArrayList<AbstractModel>> loader, ArrayList<AbstractModel> data) {
         firstAdapter.setMass(data);
         progressBar.setVisibility(View.INVISIBLE);
-        if (refreshLayout.isRefreshing()){
+        if (refreshLayout.isRefreshing()) {
             refreshLayout.setRefreshing(false);
         }
     }
@@ -116,12 +117,12 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void deleteItem (final int position){
+    public void deleteItem(final int position) {
         ArrayList<AbstractModel> mass = new ArrayList<>();
         final ArrayList<AbstractModel> currentMass = firstAdapter.getMass();
         //mass = (AbstractModel[]) Arrays.stream(currentMass).filter((e)->e!=currentMass[position]).toArray();
-        for (int i=0;i<currentMass.size()-1;i++){
-            if (i!=position){
+        for (int i = 0; i < currentMass.size() - 1; i++) {
+            if (i != position) {
                 mass.add(currentMass.get(i));
             }
         }
@@ -135,15 +136,15 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(MASSIVE,firstAdapter.getMass());
+        outState.putSerializable(MASSIVE, firstAdapter.getMass());
     }
 
-    public RecyclerView getRecyclerView(){
+    public RecyclerView getRecyclerView() {
         return recyclerView;
     }
 
     @Override
     public void onRefresh() {
-        getLoaderManager().restartLoader(0,null,this);
+        getLoaderManager().restartLoader(0, null, this);
     }
 }

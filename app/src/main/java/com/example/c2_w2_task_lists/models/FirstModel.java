@@ -1,6 +1,6 @@
 package com.example.c2_w2_task_lists.models;
 
-public class FirstModel extends AbstractModel{
+public class FirstModel extends AbstractModel {
 
     private String name;
 
