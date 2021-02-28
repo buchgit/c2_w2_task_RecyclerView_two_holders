@@ -1,11 +1,14 @@
 package com.example.c2_w2_task_lists;
 
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import com.example.c2_w2_task_lists.models.FirstModel;
 import com.example.c2_w2_task_lists.models.SecondModel;
 
@@ -17,14 +20,23 @@ public class MainActivity extends AppCompatActivity {
     private FirstAdapter firstAdapter;
     private RecyclerViewFragment fragment;
     final Random random = new Random(100);
+    final String FRAGMENT_TAG = "fragment tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragment = (RecyclerViewFragment)getSupportFragmentManager().findFragmentByTag("RECYCLER_VIEW_FRAGMENT");
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fr_container,RecyclerViewFragment.newInstance()).commit();
+        if (fragment == null) {
+            fragment = RecyclerViewFragment.newInstance();
+            getSupportFragmentManager().beginTransaction().add(R.id.fr_container,fragment,RecyclerViewFragment.TAG).replace(R.id.fr_container,fragment).commit();
+        }else {
+            fragment.getFirstAdapter().reloadAdapter();
+        }
+
+        //getSupportFragmentManager().beginTransaction().replace(R.id.fr_container,fragment).commit();
     }
 
     @Override
@@ -36,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        fragment = (RecyclerViewFragment) getSupportFragmentManager().getFragments().get(0);
+        //fragment = (RecyclerViewFragment) getSupportFragmentManager().getFragments().get(0);
+        fragment = (RecyclerViewFragment)getSupportFragmentManager().findFragmentByTag(RecyclerViewFragment.TAG);
+        assert fragment != null;
         firstAdapter = fragment.getFirstAdapter();
         int randomInt = random.nextInt();
         switch (item.getItemId()){
@@ -51,5 +65,11 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString(FRAGMENT_TAG,RecyclerViewFragment.TAG);
+//    }
 
 }

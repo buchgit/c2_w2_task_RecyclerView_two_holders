@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ProgressBar;
-import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -29,6 +28,9 @@ import java.util.ArrayList;
 public class RecyclerViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<AbstractModel>>, FirstAdapter.ElementManager, SwipeRefreshLayout.OnRefreshListener {
 
     private final static int size = 7;
+
+    public static final String TAG = "RECYCLER_VIEW_FRAGMENT";
+    public static final String MASSIVE = "massive";
 
     private RecyclerView recyclerView;
     private final FirstAdapter firstAdapter = new FirstAdapter();
@@ -75,19 +77,14 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
         //передадим в лоадер для управления progress bar
         elementManager = this;
         firstAdapter.setElementManager(elementManager);
-        //перезагрузка лоадера
-        //getLoaderManager().restartLoader(0,null,this);
+        if (savedInstanceState!=null){
+            ArrayList<AbstractModel> mass = (ArrayList<AbstractModel>) savedInstanceState.getSerializable(MASSIVE);
+            firstAdapter.setMass(mass);
+        }
         //устанавливает листенер обновлений активити
         refreshLayout.setOnRefreshListener(this);
         //передаем адаптер в главную активити
         ;
-
-
-    }
-
-    @Override
-    public void onDestroy() {
-
     }
 
     //при запуске лоадера
@@ -138,6 +135,12 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
 
     public FirstAdapter getFirstAdapter() {
         return firstAdapter;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(MASSIVE,firstAdapter.getMass());
     }
 
     @Override

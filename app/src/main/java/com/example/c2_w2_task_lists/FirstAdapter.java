@@ -95,4 +95,8 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public void reloadAdapter(){
+        notifyDataSetChanged();
+    }
+
 }
