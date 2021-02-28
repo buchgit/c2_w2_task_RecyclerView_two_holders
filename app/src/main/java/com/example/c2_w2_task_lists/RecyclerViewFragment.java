@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ProgressBar;
+import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,15 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.c2_w2_task_lists.models.AbstractModel;
 
+import java.util.ArrayList;
+
 /*
 1. implement LoaderManager.LoaderCallbacks<Т> , где Т - тип таблицы хранения наших данных
 2. implement адаптера, который extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 3/ implement SwipeRefreshLayout для обновления данных в активити
  */
 
-public class RecyclerViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<AbstractModel[]>, FirstAdapter.ElementManager, SwipeRefreshLayout.OnRefreshListener {
+public class RecyclerViewFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<AbstractModel>>, FirstAdapter.ElementManager, SwipeRefreshLayout.OnRefreshListener {
 
-    private final static int size = 15;
+    private final static int size = 7;
 
     private RecyclerView recyclerView;
     private final FirstAdapter firstAdapter = new FirstAdapter();
@@ -54,7 +57,11 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
         recyclerView = view.findViewById(R.id.rv_fragment);
         progressBar = view.findViewById(R.id.pr_bar_fragment);
         refreshLayout = view.findViewById(R.id.sw_ref_layout);
+    }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     //когда активити создана
@@ -67,10 +74,15 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
         recyclerView.setAdapter(firstAdapter);
         //передадим в лоадер для управления progress bar
         elementManager = this;
+        firstAdapter.setElementManager(elementManager);
         //перезагрузка лоадера
         //getLoaderManager().restartLoader(0,null,this);
         //устанавливает листенер обновлений активити
         refreshLayout.setOnRefreshListener(this);
+        //передаем адаптер в главную активити
+        ;
+
+
     }
 
     @Override
@@ -81,7 +93,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     //при запуске лоадера
     @NonNull
     @Override
-    public Loader<AbstractModel[]> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<ArrayList<AbstractModel>> onCreateLoader(int id, @Nullable Bundle args) {
         FirstLoader loader = new FirstLoader(getContext(), size);
         //для запуска progress bar передаем в лоадер
         loader.setElementManager(elementManager);
@@ -89,7 +101,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<AbstractModel[]> loader, AbstractModel[] data) {
+    public void onLoadFinished(@NonNull Loader<ArrayList<AbstractModel>> loader, ArrayList<AbstractModel> data) {
         firstAdapter.setMass(data);
         progressBar.setVisibility(View.INVISIBLE);
         if (refreshLayout.isRefreshing()){
@@ -98,7 +110,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<AbstractModel[]> loader) {
+    public void onLoaderReset(@NonNull Loader<ArrayList<AbstractModel>> loader) {
 
     }
 
@@ -109,6 +121,23 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
 
     public ProgressBar getProgressBar() {
         return progressBar;
+    }
+
+    @Override
+    public void deleteItem (final int position){
+        ArrayList<AbstractModel> mass = new ArrayList<>();
+        final ArrayList<AbstractModel> currentMass = firstAdapter.getMass();
+        //mass = (AbstractModel[]) Arrays.stream(currentMass).filter((e)->e!=currentMass[position]).toArray();
+        for (int i=0;i<currentMass.size()-1;i++){
+            if (i!=position){
+                mass.add(currentMass.get(i));
+            }
+        }
+        firstAdapter.setMass(mass);
+    }
+
+    public FirstAdapter getFirstAdapter() {
+        return firstAdapter;
     }
 
     @Override

@@ -9,11 +9,12 @@ import com.example.c2_w2_task_lists.models.AbstractModel;
 import com.example.c2_w2_task_lists.models.FirstModel;
 import com.example.c2_w2_task_lists.models.SecondModel;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class FirstLoader extends AsyncTaskLoader<AbstractModel[]> {
+public class FirstLoader extends AsyncTaskLoader<ArrayList<AbstractModel>> {
 
     private int size;
     private FirstAdapter.ElementManager elementManager;
@@ -25,7 +26,7 @@ public class FirstLoader extends AsyncTaskLoader<AbstractModel[]> {
     //не в главном потоке
     @Nullable
     @Override
-    public AbstractModel[] loadInBackground() {
+    public ArrayList<AbstractModel> loadInBackground() {
         try {
             return generateModels(size);
         } catch (InterruptedException e) {
@@ -45,19 +46,20 @@ public class FirstLoader extends AsyncTaskLoader<AbstractModel[]> {
         super.onStopLoading();
     }
 
-    AbstractModel[] generateModels(int size) throws InterruptedException {
+    ArrayList<AbstractModel> generateModels(int size) throws InterruptedException {
         Random random = new Random();
 
-        AbstractModel[] mass = new AbstractModel[size];
+        ArrayList<AbstractModel> mass = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            TimeUnit.MILLISECONDS.sleep(300);
+            //TimeUnit.MILLISECONDS.sleep(300);
+            TimeUnit.MILLISECONDS.sleep(100);
             int type = random.nextInt(200);
             if (type%2 == 0) {
                 FirstModel model = new FirstModel(UUID.randomUUID().toString(), "name" + i);
-                mass[i] = model;
+                mass.add(model);
             } else {
                 SecondModel model2 = new SecondModel(UUID.randomUUID().toString(), i);
-                mass[i] = model2;
+                mass.add(model2);
             }
             //elementManager.setProgress(i * 10);
         }

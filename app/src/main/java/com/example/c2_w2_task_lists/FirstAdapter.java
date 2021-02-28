@@ -11,12 +11,14 @@ import com.example.c2_w2_task_lists.models.AbstractModel;
 import com.example.c2_w2_task_lists.models.FirstModel;
 import com.example.c2_w2_task_lists.models.SecondModel;
 
+import java.util.ArrayList;
 
 public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private AbstractModel[] mass;
+    private ArrayList<AbstractModel> mass;
     public static final int FIRST_HOLDER_TYPE = 0;
     public static final int SECOND_HOLDER_TYPE = 1;
+    private FirstAdapter.ElementManager elementManager;
 
     //создает все виды холдеров из их вьюх
     @NonNull
@@ -35,17 +37,19 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof FirstHolder) {
             FirstHolder fholder = (FirstHolder) holder;
-            fholder.bind((FirstModel) mass[position]);
+            fholder.bind((FirstModel) mass.get(position),position);
+            fholder.setElementManager(elementManager);
         } else if (holder instanceof SecondHolder) {
             SecondHolder sholder = (SecondHolder) holder;
-            sholder.bind((SecondModel) mass[position]);
+            sholder.bind((SecondModel) mass.get(position),position);
+            sholder.setElementManager(elementManager);
         } else throw new IllegalArgumentException();
     }
 
     @Override
     public int getItemCount() {
         if (mass != null) {
-            return mass.length;
+            return mass.size();
         } else return 0;
     }
 
@@ -53,24 +57,42 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     //onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     @Override
     public int getItemViewType(int position) {
-        if(mass[position] instanceof FirstModel){
+        if(mass.get(position) instanceof FirstModel){
             return FIRST_HOLDER_TYPE;
-        }else if (mass[position] instanceof SecondModel){
+        }else if (mass.get(position) instanceof SecondModel){
             return SECOND_HOLDER_TYPE;
         }else throw new IllegalArgumentException();
     }
 
-    public void setMass(AbstractModel[] mass) {
-        this.mass = (AbstractModel[]) mass;
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setMass(ArrayList<AbstractModel> mass) {
+        this.mass = mass;
         //сигнал адаптеру, что данные следует обновить
         notifyDataSetChanged();
+    }
+
+    public ArrayList<AbstractModel> getMass(){
+        return mass;
     }
 
     //интерфейс для управления прогресс баром, //не доделал
     public interface ElementManager{
         void setProgress(int value);
         ProgressBar getProgressBar();
+        void deleteItem(int position);
     }
 
+    public void setElementManager(FirstAdapter.ElementManager elementManager) {
+        this.elementManager = elementManager;
+    }
+
+    public void addElement(AbstractModel model){
+        mass.add(model);
+        notifyDataSetChanged();
+    }
 
 }
