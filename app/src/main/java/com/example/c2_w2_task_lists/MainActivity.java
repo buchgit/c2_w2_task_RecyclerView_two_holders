@@ -66,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+        //устанавливаем курсор на последний элемент
         int count = firstAdapter.getItemCount();
         recyclerView.scrollToPosition(count-1);
+
         return true;
     }
 
