@@ -81,7 +81,6 @@ public class FirstAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     //интерфейс для управления прогресс баром, //не доделал
     public interface ElementManager{
-        void setProgress(int value);
         ProgressBar getProgressBar();
         void deleteItem(int position);
     }

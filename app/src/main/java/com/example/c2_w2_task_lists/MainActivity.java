@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.c2_w2_task_lists.models.FirstModel;
 import com.example.c2_w2_task_lists.models.SecondModel;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     private FirstAdapter firstAdapter;
+    private RecyclerView recyclerView;
     private RecyclerViewFragment fragment;
     final Random random = new Random(100);
     final String FRAGMENT_TAG = "fragment tag";
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         fragment = (RecyclerViewFragment)getSupportFragmentManager().findFragmentByTag(RecyclerViewFragment.TAG);
         assert fragment != null;
         firstAdapter = fragment.getFirstAdapter();
+        recyclerView = fragment.getRecyclerView();//нужен для установки курсора на добавленный элемент
         int randomInt = random.nextInt();
         switch (item.getItemId()){
             case R.id.add_fh:
@@ -63,13 +66,9 @@ public class MainActivity extends AppCompatActivity {
             default:
                 break;
         }
+        int count = firstAdapter.getItemCount();
+        recyclerView.scrollToPosition(count-1);
         return true;
     }
-
-//    @Override
-//    public void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putString(FRAGMENT_TAG,RecyclerViewFragment.TAG);
-//    }
 
 }

@@ -83,8 +83,7 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
         }
         //устанавливает листенер обновлений активити
         refreshLayout.setOnRefreshListener(this);
-        //передаем адаптер в главную активити
-        ;
+
     }
 
     //при запуске лоадера
@@ -112,10 +111,6 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void setProgress(int value){
-        progressBar.setProgress(value);
-    }
-
     public ProgressBar getProgressBar() {
         return progressBar;
     }
@@ -141,6 +136,10 @@ public class RecyclerViewFragment extends Fragment implements LoaderManager.Load
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(MASSIVE,firstAdapter.getMass());
+    }
+
+    public RecyclerView getRecyclerView(){
+        return recyclerView;
     }
 
     @Override
